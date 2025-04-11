@@ -161,7 +161,7 @@ class App(customtkinter.CTk):
         self.frame1.grid(row=0, column=1, sticky="nsew")
 
         #credits
-        self.label = customtkinter.CTkLabel(self, text="Developed by: Farias Hamid Jim", font=("Arial", 15))
+        self.label = customtkinter.CTkLabel(self, text="Developed by: Farias Hamid Jim with help of Rashed Shan", font=("Arial", 10))
         self.label.grid(row=1, column=0, columnspan=2, pady=2, sticky="w")
         self.label = customtkinter.CTkLabel(self, text="Version: 1.0", font=("Arial", 15))
         self.label.grid(row=1, columnspan=2, column=0, pady=2, sticky="e")
