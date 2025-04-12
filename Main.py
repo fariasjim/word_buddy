@@ -92,6 +92,9 @@ class frame1(customtkinter.CTkFrame):
         self.conv_button = customtkinter.CTkButton(self, text="CONVERT", font=("Bahnschrift SemiBold Condensed", 30), corner_radius=20, hover= True, hover_color="green", command=code.convert)
         self.conv_button.grid(row=4, column=0, pady=20)
 
+        self.label4 = customtkinter.CTkLabel(self, text="Special thanks to Rashed Shan", font=("Arial", 10, "bold"))
+        self.label4.place(relx=0, rely=1.0, anchor="sw")
+
         self.toggle = self.ThemeToggle(master = self, command=None)
         self.toggle.place(relx=1.0, rely=1.0, anchor="se")
 
@@ -161,7 +164,7 @@ class App(customtkinter.CTk):
         self.frame1.grid(row=0, column=1, sticky="nsew")
 
         #credits
-        self.label = customtkinter.CTkLabel(self, text="Developed by: Farias Hamid Jim with help of Rashed Shan", font=("Arial", 10))
+        self.label = customtkinter.CTkLabel(self, text="Developed by: Farias Hamid Jim", font=("Arial", 15))
         self.label.grid(row=1, column=0, columnspan=2, pady=2, sticky="w")
         self.label = customtkinter.CTkLabel(self, text="Version: 1.0", font=("Arial", 15))
         self.label.grid(row=1, columnspan=2, column=0, pady=2, sticky="e")
@@ -171,4 +174,4 @@ class App(customtkinter.CTk):
 
 
 app = App()
-app.mainloop()
+
