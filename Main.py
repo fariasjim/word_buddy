@@ -166,12 +166,13 @@ class App(customtkinter.CTk):
         #credits
         self.label = customtkinter.CTkLabel(self, text="Developed by: Farias Hamid Jim", font=("Arial", 15))
         self.label.grid(row=1, column=0, columnspan=2, pady=2, sticky="w")
-        self.label = customtkinter.CTkLabel(self, text="Version: 1.0", font=("Arial", 15))
+        self.label = customtkinter.CTkLabel(self, text="Version: 1.0.1", font=("Arial", 15))
         self.label.grid(row=1, columnspan=2, column=0, pady=2, sticky="e")
         self.label1 = customtkinter.CTkLabel(self, text="All rights reserved", font=("Arial", 15))
         self.label1.grid(row=1, column=0, columnspan=2, pady=2, sticky="s")
         
-
+######bypassing Init.py
 
 app = App()
+app.mainloop()
 

@@ -99,7 +99,7 @@ conversionMap = {
 	'‚': 'ূ', #	 U-kaar
 	'„„': 'ৃ', # Double Rri-kar Bug
 	'„': 'ৃ', #	 Ri-Kar
-	'…': 'ৃ', #	 Ri-Kar
+	'„': 'ৃ', #	 Ri-Kar
 	'†': 'ে', #	 E-Kar
 	'‡': 'ে', #	 E-Kar
 	'ˆ': 'ৈ', #	 Oi-Kar
@@ -131,7 +131,7 @@ conversionMap = {
 	'¨': '্য',
 	'©': 'র্',
 	'ª': '্র',
-	'«': '্র',
+	'Ö': '্র',
 	'¬': '্ল',
 	'­': '্ল',
 	'®': 'ষ্',
@@ -483,7 +483,7 @@ class Unicode:
 
 		main_char = {
 			"।"	  :	  "|",	"‘"	  :	  "Ô",	"’"	  :	  "Õ",
-			"“"	  :	  "Ò",	"”"	  :	  "Ó",	"্র্য"	 :	 "ª¨",
+			"“"	  :	  "Ò",	"”"	  :	  "Ó",	"্র্য"	 :	 "Ö¨",
 			"ম্প্র"	  :	  "¤úª",	"র‌্য"	 :	 "i¨",	"ক্ষ্ম"	  :	  "²",
 			"ক্ক"	:	"°",	"ক্ট"	:	"±",	"ক্ত"	:	"³",
 			"ক্ব"	:	"K¡",	"স্ক্র"	  :	  "¯Œ",		"ক্র"	:	"µ",
@@ -532,7 +532,7 @@ class Unicode:
 			"স্ব"	:	"¯^",	"স্ম"	:	"¯§",	"স্ল"	:	"¯ø­",
 			"হু"   :   "û",		"হ্ণ"	:	"nè",	"হ্ব"	:	"nŸ",
 			"হ্ন"	:	"ý",	"হ্ম"	:	"þ",	"হ্ল"	:	"n¬",
-			"হৃ"   :   "ü",		"র্"   :   "©",		"্র"   :   "«",
+			"হৃ"   :   "ü",		"র্"   :   "©",		"্র"   :   "Ö",
 			"্য"   :   "¨",		"্"	  :	  "&",	"আ"	  :	  "Av",
 			"অ"	  :	  "A",	"ই"	  :	  "B",	"ঈ"	  :	  "C",
 			"উ"	  :	  "D",	"ঊ"	  :	  "E",	"ঋ"	  :	  "F",
@@ -567,9 +567,9 @@ class Unicode:
 		replacement = 'ৌ'
 		srcString = util.preg_replace(pattern, replacement, srcString)
 
-		pattern ='ড়'
-		replacement = "ড়"
-		srcString = util.preg_replace(pattern, replacement, srcString)
+		#pattern ='ড়'
+		#replacement = "ড়"
+		#srcString = util.preg_replace(pattern, replacement, srcString)
 
 		pattern ='য়'
 		replacement = "য়"
