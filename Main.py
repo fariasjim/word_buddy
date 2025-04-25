@@ -1,6 +1,7 @@
 import customtkinter
 from PIL import Image, ImageTk
 from tkinter import filedialog, messagebox
+from tkinter import colorchooser
 import os
 import convertion_logic  # Import the wordconv module
 
@@ -10,6 +11,9 @@ file_path = None
 save_path = None
 
 class code():
+    def color_picker():
+        global color
+        color = colorchooser.askcolor(title="Pick a Color")[1]
     def open_path_code():
         global file_path
         global save_path
@@ -41,9 +45,11 @@ class code():
             save_path = file_path
         
         try:
-            convertion_logic.replace_and_highlight(file_path, save_path)
-            messagebox.showinfo("Success", "File converted successfully")
-            os.startfile(save_path)  # Open the file
+            if openvalue.get()==1:
+                convertion_logic.replace_and_highlight(file_path, save_path)
+                os.startfile(save_path)  # Open the file
+            else:
+                convertion_logic.replace_and_highlight(file_path, save_path)
         except Exception as e:
             messagebox.showerror("Error", f"An error occurred: {str(e)}")
     
@@ -67,6 +73,34 @@ class frame1(customtkinter.CTkFrame):
 
         ##Checkbox value
         global checkboxvalue
+        global openvalue
+        global high_value
+        global high_values
+        global color_name_to_index
+        high_values = {
+    0:  "wdAuto",
+    1:  "wdBlack",
+    2:  "wdBlue",
+    3:  "wdTurquoise",
+    4:  "wdBrightGreen",
+    5:  "wdPink",
+    6:  "wdRed",
+    7:  "wdYellow",
+    8:  "wdWhite",
+    9:  "wdDarkBlue",
+    10: "wdTeal",
+    11: "wdGreen",
+    12: "wdViolet",
+    13: "wdDarkRed",
+    14: "wdDarkYellow",
+    15: "wdGray50",
+    16: "wdGray25",
+    17: "wdByAuthor",       # Used in track changes/comments
+    18: "wdNoHighlight"     # Removes highlight
+}
+        color_name_to_index = {v: k for k, v in high_values.items()}
+        high_value = customtkinter.IntVar(value=1)
+        openvalue = customtkinter.IntVar(value=1)
         checkboxvalue = customtkinter.IntVar(value=1)
 
         self.master = master
@@ -86,11 +120,23 @@ class frame1(customtkinter.CTkFrame):
         self.button2 = customtkinter.CTkButton(self, text="Browse", command= code.save_path_code, corner_radius=20, hover= True, hover_color="gray")
         self.button2.grid(row=2, column=0, pady=5, sticky="e")  
 
-        self.checkbox1 = customtkinter.CTkSwitch(self, text="Overwrite same file", variable=checkboxvalue, font=("Arial",20,"bold"))
+        self.checkbox1 = customtkinter.CTkSwitch(self, text="Overwrite same file", variable=checkboxvalue, font=("Arial",15,"bold"))
         self.checkbox1.grid(row=3, column=0, padx=20, pady=5, sticky="w")
 
+        self.checkbox2 = customtkinter.CTkSwitch(self, text="Open file after convertion", variable=openvalue, font=("Arial",15,"bold"))
+        self.checkbox2.grid(row=4, column=0, padx=20, pady=5, sticky="w")
+
+        self.checkbox3 = customtkinter.CTkSwitch(self, text="Converted text highlight", variable=high_value, font=("Arial", 15, "bold"))
+        self.checkbox3.grid(row=5, column=0, padx=20, pady=5, sticky="w")
+
+        self.drop = customtkinter.CTkOptionMenu(self, values=list(color_name_to_index))
+        self.drop.grid(row=7, column=0, padx=20, pady=5, sticky="w")
+
+        self.label4 = customtkinter.CTkLabel(self, text="Select Color", font=("Aria", 15,"bold"))
+        self.label4.grid(row=6, column=0, padx=20, pady=1, sticky="w")
+
         self.conv_button = customtkinter.CTkButton(self, text="CONVERT", font=("Bahnschrift SemiBold Condensed", 30), corner_radius=20, hover= True, hover_color="green", command=code.convert)
-        self.conv_button.grid(row=4, column=0, pady=20)
+        self.conv_button.grid(row=9, column=0, pady=20)
 
         self.label4 = customtkinter.CTkLabel(self, text="Special thanks to Rashed Shan", font=("Arial", 10, "bold"))
         self.label4.place(relx=0, rely=1.0, anchor="sw")

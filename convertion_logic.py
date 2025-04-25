@@ -25,7 +25,7 @@ def replace_and_highlight(doc_path, save_path):
                     converted_text = unicode_converter.convertUnicodeToBijoy(run.text)
                     if run.text != converted_text:
                         run.text = converted_text
-                        run.font.highlight_color = WD_COLOR_INDEX.TEAL  # Teal highlight
+                        run.font.highlight_color = WD_COLOR_INDEX.TURQUOISE  # Teal highlight
                         run.font.name = "SutonnyMJ"  # Set font to Bijoy
                         runs.append(run)
                         
@@ -42,7 +42,7 @@ def replace_and_highlight(doc_path, save_path):
                                 converted_text = unicode_converter.convertUnicodeToBijoy(run.text)
                                 if run.text != converted_text:
                                     run.text = converted_text
-                                    run.font.highlight_color = WD_COLOR_INDEX.TEAL  # Teal highlight
+                                    run.font.highlight_color = WD_COLOR_INDEX.TURQUOISE  # Teal highlight
                                     run.font.name = "SutonnyMJ" # Set font to Bijoy
                                     runs.append(run)
 
