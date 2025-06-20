@@ -9,7 +9,7 @@ import io
 import shutil
 import time
 
-# 🔧 Config
+# Config
 REPO_OWNER = "fariasjim"
 REPO_NAME = "wordbuddy"
 BRANCH = "main"
@@ -65,15 +65,17 @@ def main():
 url = "https://raw.githubusercontent.com/fariasjim/wordbuddy/refs/heads/main/version.txt"
 response = requests.get(url)
 
-version = "1.0.0\n"  # Current version of your application
+version = "1.0.1\n"  # Current version of application
 
+print(response.text)
 if response.status_code == 200:
     if response.text == version:
         Main.app.mainloop()  # Start the main application loop
+    elif response.text == "4000\n":
+        messagebox.showerror("Under maintenance", "Update under progress/Author has ended software support")
     else:
         messagebox.showinfo("Update Available","New update available. Press OK to update and restart")
         main()
-        
         
     
 else:

@@ -4,6 +4,85 @@ from tkinter import filedialog, messagebox
 from tkinter import colorchooser
 import os
 import convertion_logic  # Import the wordconv module
+## fixing png loading problems
+import sys
+import json
+
+def resource_path(relative_path):
+    """ Get absolute path to resource (for PyInstaller or normal run) """
+    if hasattr(sys, '_MEIPASS'):
+        base_path = sys._MEIPASS  # PyInstaller temp folder
+    else:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+img1 = resource_path("assets/1.png")
+img2 = resource_path("assets/2.png")
+
+###Trying to add to path
+import sys
+import shutil
+import ctypes
+import subprocess
+
+def is_admin():
+    if os.name == 'nt':
+        try:
+            return ctypes.windll.shell32.IsUserAnAdmin() != 0
+        except:
+            return False
+    else:
+        return os.geteuid() == 0
+
+def is_script_in_path(script_path):
+    paths = os.environ.get('PATH', '').split(os.pathsep)
+    script_name = os.path.basename(script_path)
+    for directory in paths:
+        full_path = os.path.join(directory, script_name)
+        if os.path.isfile(full_path):
+            if os.path.samefile(script_path, full_path):
+                return True
+    return False
+
+def install_script(script_path):
+    paths = os.environ.get('PATH', '').split(os.pathsep)
+    writable_paths = [p for p in paths if os.access(p, os.W_OK | os.X_OK)]
+    if not writable_paths:
+        sys.exit(1)
+    target_dir = writable_paths[0]
+    target_path = os.path.join(target_dir, os.path.basename(script_path))
+    try:
+        shutil.copy2(script_path, target_path)
+        if os.name != 'nt':
+            os.chmod(target_path, 0o755)
+        return target_path
+    except Exception as e:
+        sys.exit(1)
+
+def add_to_system_path_windows(new_path):
+    current_path = os.environ.get('PATH', '')
+    if new_path.lower() not in (p.lower() for p in current_path.split(';')):
+        subprocess.run(f'setx PATH "{current_path};{new_path}"', shell=True)
+        print(f"Added {new_path} to PATH.")
+
+def main():
+    script_path = os.path.abspath(sys.argv[0])
+    if is_script_in_path(script_path):
+        return
+    
+    if is_admin():
+        new_path = install_script(script_path)
+        # Optionally on Windows, add directory to system/user PATH
+        if os.name == 'nt':
+            add_to_system_path_windows(os.path.dirname(new_path))
+            messagebox.showinfo(title="Added To Path", message="Now you can call the program from any Path.")
+    else:
+        pass
+
+if __name__ == '__main__':
+    main()
+
+
 
 global file_path
 global save_path
@@ -19,7 +98,7 @@ class code():
         global file_path
         global save_path
         try:
-            file_path = filedialog.askopenfilename(filetypes=[("Word Files", "*.docx")])
+            file_path = filedialog.askopenfilename(initialdir=os.getcwd(),filetypes=[("Word Files", "*.docx")], title="Open Word Files")
             if file_path:
                 save_path = os.path.dirname(file_path)  # Set save path to the same directory as the file
             else:
@@ -30,7 +109,7 @@ class code():
     def save_path_code():
         global save_path
         try:
-            save_path = filedialog.asksaveasfilename(filetypes=[("Word Files", "*.docx")])
+            save_path = filedialog.asksaveasfilename(initialdir=os.getcwd(),filetypes=[("Word Documents", "*.docx")],title="Save as Word Document")
             if save_path:
                 pass
             else:
@@ -68,7 +147,7 @@ class imageframe(customtkinter.CTkFrame):
         self.create_widgets()
     
     def create_widgets(self):
-        self.image1 = customtkinter.CTkImage(light_image= Image.open("2.png"), dark_image= Image.open("1.png"), size=(400,600))
+        self.image1 = customtkinter.CTkImage(light_image= Image.open(img2), dark_image= Image.open(img1), size=(400,600))
         self.label1 = customtkinter.CTkLabel(self, text="", image=self.image1)
         self.label1.grid(row=0, column=0)
 
@@ -195,5 +274,5 @@ class App(customtkinter.CTk):
 ######bypassing Init.py
 
 app = App()
-app.mainloop()
+##app.mainloop()
 
