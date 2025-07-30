@@ -1,1 +1,7 @@
 dist/init.exe
+init.spec
+/build
+__pycache__/Main.cpython-313.pyc
+__pycache__/Main.cpython-313.pyc
+/__pycache__
+/__pycache__

@@ -18,6 +18,8 @@ def resource_path(relative_path):
 
 img1 = resource_path("assets/1.png")
 img2 = resource_path("assets/2.png")
+icon = resource_path("assets/3.ico")
+
 
 ###Trying to add to path
 import sys
@@ -272,7 +274,7 @@ class App(customtkinter.CTk):
         self.label1.grid(row=1, column=0, columnspan=2, pady=2, sticky="s")
         
 ######bypassing Init.py
-
 app = App()
+app.iconbitmap(icon)  # Set the icon for the application
 ##app.mainloop()
 
