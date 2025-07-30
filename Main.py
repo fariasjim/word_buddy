@@ -18,7 +18,7 @@ def resource_path(relative_path):
 
 img1 = resource_path("assets/1.png")
 img2 = resource_path("assets/2.png")
-icon = resource_path("assets/W.ico")
+icon = resource_path("assets/3.ico")
 
 
 ###Trying to add to path

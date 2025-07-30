@@ -25,7 +25,7 @@ TEMP_EXTRACT_DIR = os.path.join(CURRENT_DIR, "temp_update")
 
 url = "https://raw.githubusercontent.com/fariasjim/wordbuddy/refs/heads/main/version.txt"
 
-version = "1.0.1\n"  # Current version of application
+version = "1.0.2\n"  # Current version of application
 
 app = QApplication(sys.argv)
 
