@@ -42,20 +42,13 @@ pixmap = QPixmap(image_path)  # Use absolute path for compatibility with PyInsta
 # Create the splash screen object
 splash = QSplashScreen(pixmap, Qt.WindowType.WindowStaysOnTopHint)
 splash.show()
-app.processEvents()  # Ensure the splash screen is shown immediately
-
-splash.showMessage(
-    "Validating your Wordbuddy installation...", 
-    alignment=Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignCenter, 
-    color=Qt.GlobalColor.white
-)
 app.processEvents()
 splash.showMessage(
     "Checking for updates...", 
     alignment=Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignCenter, 
     color=Qt.GlobalColor.white)
 app.processEvents()
-#time.sleep(0.5)  # Simulate a delay for checking updates
+time.sleep(0.5)  # Simulate a delay for checking updates
 response = requests.get(url)
 if response.status_code == 200:
     if response.text == version:  # Start the main application loop
@@ -81,7 +74,7 @@ if response.status_code == 200:
         splash.close()
     else:
         splash.showMessage(
-            "Update available. Press OK to update and restart", 
+            "Update available!!!!!", 
             alignment=Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignCenter, 
             color=Qt.GlobalColor.blue
         )
