@@ -1,6 +1,6 @@
-All SolaimanLipi should be converted to sutonnymj
-Question mark 
-Hyphen
-Sometimes font change doesn't work
+Changelog:
+    New UI elements including New word.docx generator for MCQ
+    ? mark needs to be translated to sutonnymj
+    Try to fix ' ে' matra and 'ড়ি' encoding
+    fix issues with update not getting into commandline and try to insert that in the program itself
 
-Hello World
