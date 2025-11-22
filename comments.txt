@@ -1,6 +1,6 @@
-Changelog:
-    New UI elements including New word.docx generator for MCQ
+Changelog (1.0.3):
+    ✅Fixed various encoding problems [thanks to Rashed Shan]
     ? mark needs to be translated to sutonnymj
-    Try to fix ' ে' matra and 'ড়ি' encoding
+    New UI elements including New word.docx generator for MCQ
     fix issues with update not getting into commandline and try to insert that in the program itself
 
