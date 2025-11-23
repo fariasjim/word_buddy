@@ -16,9 +16,11 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
 
+global img3
 img1 = resource_path("assets/1.png")
 img2 = resource_path("assets/2.png")
 icon = resource_path("assets/3.ico")
+img3 = resource_path("assets/4.png")
 
 
 ###Trying to add to path
@@ -321,6 +323,10 @@ class convframe(customtkinter.CTkFrame):
                 self.after(10, self.animate, start + step, end)  # Smooth animation
             else:
                 self.button.place(x=end, y=3)
+def report_issues():
+    import webbrowser
+    webbrowser.open("https://docs.google.com/forms/d/e/1FAIpQLSfD0Z7ZIF7GLmJNEENhhN6mvwvYRv8xapLqLLxOmXO8drRizQ/viewform?usp=sharing&ouid=112908537690851176933")
+
 
 def credits():
     credit_window = customtkinter.CTk()
@@ -328,10 +334,20 @@ def credits():
     credit_window.geometry("600x400")
     changes_label = customtkinter.CTkLabel(credit_window, text="Version: 1.0.2[1]\n\nChanges:\n- Fixed various encoding problems [thanks to Rashed Shan]\n- Minor UI adjustments", font=("Times New Roman", 20), justify="left")
     changes_label.place(relx=0, rely=0)
-    report_btn = customtkinter.CTkButton(credit_window, text="Report Issues", font=("Arial", 20), hover=True, hover_color='Red', command=None)
+    report_btn = customtkinter.CTkButton(credit_window, text="Report Issues", font=("Arial", 20), hover=True, hover_color='Red', command=report_issues)
     report_btn.place(relx=0.85, rely=0.05, anchor="center")
-    dev_label = customtkinter.CTkLabel(credit_window, text="{DevInfo}", font=("Consolas", 30))
+    dev_label = customtkinter.CTkLabel(credit_window, text="{DevInfo}", font=("Courier New", 40))
     dev_label.place(relx=0.5, rely=0.35, anchor="center")
+    name_label = customtkinter.CTkLabel(credit_window, text="Farias Hamid Jim", font=("Courier New", 30))
+    name_label.place(relx=0, rely=0.5, anchor="w")
+    mail_label = customtkinter.CTkLabel(credit_window, text="Email: fariashamid@gmail.com", font=("Courier New", 18))
+    mail_label.place(relx=0, rely=0.58, anchor="w")
+    pin_label = customtkinter.CTkLabel(credit_window, text="Pin- 8312", font=("Courier New", 15))
+    pin_label.place(relx=0, rely=0.63, anchor="w")
+    #####Fix Image loading problem
+    #photo = customtkinter.CTkImage(light_image= Image.open(img3), dark_image= Image.open(img3), size=(150,150))
+    #photo_label = customtkinter.CTkLabel(credit_window, text="", image=photo)  
+    #photo_label.place(relx=0.75, rely=0.65, anchor="center")
 
 
 
@@ -368,5 +384,5 @@ class App(customtkinter.CTk):
 ######bypassing Init.py
 app = App()
 app.iconbitmap(icon)  # Set the icon for the application
-app.mainloop()
+###app.mainloop()
 

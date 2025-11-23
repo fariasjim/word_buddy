@@ -4,3 +4,7 @@ Changelog (1.0.3):
     New UI elements including New word.docx generator for MCQ
     fix issues with update not getting into commandline and try to insert that in the program itself
 
+
+Report Issues:
+https://docs.google.com/forms/d/e/1FAIpQLSfD0Z7ZIF7GLmJNEENhhN6mvwvYRv8xapLqLLxOmXO8drRizQ/viewform?usp=sharing&ouid=112908537690851176933
+

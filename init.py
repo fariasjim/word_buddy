@@ -24,8 +24,9 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 TEMP_EXTRACT_DIR = os.path.join(CURRENT_DIR, "temp_update")
 
 url = "https://raw.githubusercontent.com/fariasjim/wordbuddy/refs/heads/main/version.txt"
+url1 = "https://raw.githubusercontent.com/fariasjim/wordbuddy/refs/heads/main/update.bat"
 
-version = "1.0.2\n"  # Current version of application
+version = "1.0.2[1]\n"  # Current version of application
 
 app = QApplication(sys.argv)
 
@@ -50,6 +51,7 @@ splash.showMessage(
 app.processEvents()
 time.sleep(0.5)  # Simulate a delay for checking updates
 response = requests.get(url)
+batch_file_path = os.path.join(base_path, "update.bat")
 if response.status_code == 200:
     if response.text == version:  # Start the main application loop
         splash.showMessage(
@@ -59,6 +61,11 @@ if response.status_code == 200:
         )
         app.processEvents()
         time.sleep(0.5)  # Simulate a delay for loading
+        if batch_file_path:
+            try:
+                os.remove(batch_file_path)
+            except Exception as e:
+                print(f"Error removing update.bat: {e}")
         splash.close()
         Main.main()
         Main.app.mainloop()
@@ -82,19 +89,13 @@ if response.status_code == 200:
         time.sleep(3)  # Simulate a delay for loading
         splash.close()
         messagebox.showinfo("Update Available","New update available. Press OK to update and restart")
+        # Download the file
+        response = requests.get(url1, stream=True)
+        response.raise_for_status()  # Raise error if download fails
+
+        with open(batch_file_path, "wb") as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                f.write(chunk)
+
+        print(f"Downloaded file to: {batch_file_path}")
         os.startfile("update.bat")
-
-
-# Simulate your app loading (replace with actual loading code)
-###time.sleep(3)  # Simulate a delay for loading
-
-# Main application window
-##main_win = QMainWindow()
-##main_win.setWindowTitle("Wordbuddy")
-##main_win.resize(800, 600)
-##main_win.show()
-
-# Close splash screen and start the main app
-##splash.finish(main_win)
-
-###sys.exit(app.exec())
