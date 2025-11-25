@@ -383,7 +383,10 @@ class App(customtkinter.CTk):
         
 ######bypassing Init.py
 app = App()
-app.iconbitmap(icon)  # Set the icon for the application
+try:
+    app.iconbitmap(icon)  # Set the icon for the application
+except:
+    pass
 if __name__ == "__main__":
     app.mainloop()
 
