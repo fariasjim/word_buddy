@@ -65,7 +65,7 @@ if response.status_code == 200:
             try:
                 os.remove(batch_file_path)
             except Exception as e:
-                print(f"Error removing update.bat: {e}")
+                pass
         splash.close()
         Main.main()
         Main.app.mainloop()
@@ -79,6 +79,20 @@ if response.status_code == 200:
         app.processEvents()
         time.sleep(3)  # Simulate a delay for loading
         splash.close()
+    elif response.text == "5000\n":
+        splash.showMessage(
+            "Program is Under Maintenance", 
+            alignment=Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignCenter, 
+            color=Qt.GlobalColor.red
+        )
+        app.processEvents()
+        time.sleep(3)  # Simulate a delay for loading
+        splash.close()
+        messagebox.showerror("Under maintenance", "Update under progress/Author has ended software support")
+        app.processEvents()
+        time.sleep(3)  # Simulate a delay for loading
+        splash.close()
+        
     else:
         splash.showMessage(
             "Update available!!!!!", 
@@ -96,6 +110,4 @@ if response.status_code == 200:
         with open(batch_file_path, "wb") as f:
             for chunk in response.iter_content(chunk_size=8192):
                 f.write(chunk)
-
-        print(f"Downloaded file to: {batch_file_path}")
         os.startfile("update.bat")
