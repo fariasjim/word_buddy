@@ -16,34 +16,10 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
 
-def get_tk_image(relative_path, size=None):
-    """ 
-    Resolves resource path and loads image using Pillow's ImageTk. 
-    Returns an ImageTk.PhotoImage object.
-    """
-    # 1. Resolve the actual file path (works for PyInstaller or script)
-    absolute_path = resource_path(relative_path)
-    
-    # 2. Load the image using Pillow (handles ICO, PNG, etc., cross-platform)
-    try:
-        img_pillow = Image.open(absolute_path)
-    except FileNotFoundError:
-        print(f"ERROR: Image file not found at: {absolute_path}")
-        # Return a fallback or raise the error
-        raise
-        
-    # 3. (Optional) Resize the image if a size tuple (width, height) is provided
-    if size:
-        img_pillow = img_pillow.resize(size)
-        
-    # 4. Convert the Pillow object to a Tkinter/CustomTkinter compatible object
-    img_tk = ImageTk.PhotoImage(img_pillow)
-    
-    return img_tk
-
 global img3
 img1 = resource_path("assets/1.png")
 img2 = resource_path("assets/2.png")
+icon = resource_path("assets/3.ico")
 img3 = resource_path("assets/4.png")
 
 
@@ -407,7 +383,6 @@ class App(customtkinter.CTk):
         
 ######bypassing Init.py
 app = App()
-icon = get_tk_image("assets/3.ico")
-app.wm_iconphoto(True, icon)  # Set the icon for the application
-app.mainloop()
+app.iconbitmap(icon)  # Set the icon for the application
+###app.mainloop()
 
