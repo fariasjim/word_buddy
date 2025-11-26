@@ -26,7 +26,7 @@ TEMP_EXTRACT_DIR = os.path.join(CURRENT_DIR, "temp_update")
 url = "https://raw.githubusercontent.com/fariasjim/wordbuddy/refs/heads/main/version.txt"
 url1 = "https://raw.githubusercontent.com/fariasjim/wordbuddy/refs/heads/main/update.bat"
 
-version = "1.0.2[1]\n"  # Current version of application
+version = "1.0.2[2]\n"  # Current version of application
 
 app = QApplication(sys.argv) 
 
