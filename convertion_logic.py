@@ -11,13 +11,14 @@ def contains_unicode(text):
     return bool(re.search(r'[^\x00-\x7F]', text))
 unic1 = r"\U+09BC"
 minor_replacement_map = {
+"Zowr":"Zwor",
 " ‡":" †",
 "K¨y":"Kz¨",
 "MW"+unic1+"‡": "M‡o",
 " ‰":" ˆ",
 "¯—":"¯Í",
 "š—":"šÍ",
-"M­":"Mø",
+"M¬":"Mø",
 "Zª":"Î",
 " ˆ":" ˆ",
 "nÖ":"n«",
@@ -37,12 +38,13 @@ minor_replacement_map = {
 "l&µ":"®Œ",
 "ù~":"ù‚",
 "gœ":"¤œ",
-"¤ø­":"¤ø",
-"¯ø­":"¯ø",
+"¤ø¬":"¤ø",
+"¯ø¬":"¯ø",
 "dÖ":"d«",
 "gÖ":"¤ª",
 " ‰":" ˆ",
 "mÖ":"¯ª",
+"iª&w`":"w`©",
 "±Ö":"±ª",
 "¯Íy":"¯‘",
 "iÖ¨":"i¨",
@@ -52,7 +54,7 @@ minor_replacement_map = {
 "¯‹y":"¯‹z",
 "AÖ¨":"A¨",
 "m&K":"¯‹",
-"¯ø­¨":"¯ø¨",
+"¯ø¬¨":"¯ø¨",
 "K~":"K‚",
 "P~":"P‚",
 "Q~":"Q‚",
@@ -74,7 +76,7 @@ minor_replacement_map = {
 "e¨y":"ey¨",
 "RowZ":"RwoZ",
 "O&¶":"•ÿ",
-"Ö":"ª",
+"Ö":"ª", 
 "Ky":"Kz",
 "Py":"Pz",
 "Qy":"Qz",
@@ -90,8 +92,14 @@ minor_replacement_map = {
 "fy":"fz",
 "oy":"o–",
 "‡o":"o‡",
+"qª¨v":"q¨v",
 "qww":"wqw",
-"cowqv":"cwoqv"
+"cowqv":"cwoqv",
+"qÖ¨v":"q¨v",
+"iÖ¨v":"i¨v",
+"i‌ª¨v":"i¨v",
+"¤ø­x":"¤øx",
+"owr":"wor"
 }
 def minor_fixes(match):
     matched_char = match.group(0)
@@ -109,6 +117,8 @@ def replace_and_highlight(doc_path, save_path, h_value):
             print(run)
             if contains_unicode(run.text):
                 runs.append(run)
+                if run.text =='?' and run.font.name == "SolaimanLipi":
+                    run.font.name = "SutonnyMJ"
                 if contains_unicode(run.text) and run.font.name == "SolaimanLipi":
             # Convert the text from Unicode to Bijoy
                     converted_text = unicode_converter.convertUnicodeToBijoy(run.text)
@@ -125,7 +135,7 @@ def replace_and_highlight(doc_path, save_path, h_value):
                             run.font.highlight_color = WD_COLOR_INDEX.TURQUOISE  # Teal highlight
                         run.font.name = "SutonnyMJ"  # Set font to Bijoy
                         runs.append(run)
-                        print(run.text)
+                
                         
 
     
@@ -134,16 +144,27 @@ def replace_and_highlight(doc_path, save_path, h_value):
             for cell in row.cells:
                 for paragraph in cell.paragraphs:
                     for run in paragraph.runs:
+                        if run.text =='?' and run.font.name == "SolaimanLipi":
+                            run.font.name = "SutonnyMJ"
                         if contains_unicode(run.text):
                             if contains_unicode(run.text) and run.font.name == "SolaimanLipi":
                         # Convert the text from Unicode to Bijoy
                                 converted_text = unicode_converter.convertUnicodeToBijoy(run.text)
+                                converted_text = re.sub(pattern, minor_fixes, converted_text)
+                                if converted_text[0] == '‡':
+                        # Create a new string: '†' + everything from the 2nd character onward
+                                    converted_text = '†' + converted_text[1:]
+                                if converted_text[0] == '‰':
+                        # Create a new string: '†' + everything from the 2nd character onward
+                                    converted_text = 'ˆ' + converted_text[1:]
                                 if run.text != converted_text:
                                     run.text = converted_text
                                     if h_value == 1:
                                         run.font.highlight_color = WD_COLOR_INDEX.TURQUOISE  # Teal highlight
                                     run.font.name = "SutonnyMJ" # Set font to Bijoy
                                     runs.append(run)
+                            if run.text =='?' and run.font.name == "SolaimanLipi":
+                                run.font.name = "SutonnyMJ"
 
     for run in runs:
         try:

@@ -28,7 +28,7 @@ url1 = "https://raw.githubusercontent.com/fariasjim/wordbuddy/refs/heads/main/up
 
 version = "1.0.2[1]\n"  # Current version of application
 
-app = QApplication(sys.argv)
+app = QApplication(sys.argv) 
 
 # Load a pixmap (image) for your splash screen
 if getattr(sys, 'frozen', False):
@@ -79,20 +79,7 @@ if response.status_code == 200:
         app.processEvents()
         time.sleep(3)  # Simulate a delay for loading
         splash.close()
-    elif response.text == "5000\n":
-        splash.showMessage(
-            "Program is Under Maintenance", 
-            alignment=Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignCenter, 
-            color=Qt.GlobalColor.red
-        )
-        app.processEvents()
-        time.sleep(3)  # Simulate a delay for loading
-        splash.close()
-        messagebox.showerror("Under maintenance", "Update under progress/Author has ended software support")
-        app.processEvents()
-        time.sleep(3)  # Simulate a delay for loading
-        splash.close()
-        
+
     else:
         splash.showMessage(
             "Update available!!!!!", 
