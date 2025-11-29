@@ -3,6 +3,22 @@ from docx.enum.text import WD_COLOR_INDEX
 import converter  # Import the converter module
 import re
 from tkinter import messagebox
+from docx.oxml.ns import qn
+
+unicode_fonts = ["Vrinda",
+"Vrinda (Headings CS)",
+"Shonar Bangla",
+"Nirmala UI",
+"Kalpurush",
+"SolaimanLipi",
+"Siyam Rupali",
+"Nikosh",
+"Noto Sans Bengali",
+"Noto Serif Bengali",
+"Hind Siliguri",
+"Baloo Da",
+"Mina",
+"Mitra Unicode"]
 
 runs = []
 
@@ -106,6 +122,18 @@ def minor_fixes(match):
     return minor_replacement_map.get(matched_char, matched_char)
 pattern = r"|".join(re.escape(key) for key in minor_replacement_map.keys())
 
+def set_run_font(run):
+    # 1. Set the primary font name (font.name)
+    run.font.name = "SutonnyMJ"
+    
+    # 2. Force the font name into the XML for all ranges
+    # This is often the fix for complex/non-Latin scripts
+    rPr = run._element.get_or_add_rPr()
+    rFonts = rPr.get_or_add_rFonts()
+    rFonts.set(qn("w:ascii"), "SutonnyMJ")        # Latin/ASCII characters
+    rFonts.set(qn("w:hAnsi"), "SutonnyMJ")       # High ANSI (used for Windows characters)
+    rFonts.set(qn("w:cs"), "SutonnyMJ")          # Complex Script/Bidi (often for Bengali)
+
 def replace_and_highlight(doc_path, save_path, h_value):
     doc = Document(doc_path)
     
@@ -117,9 +145,9 @@ def replace_and_highlight(doc_path, save_path, h_value):
             print(run)
             if contains_unicode(run.text):
                 runs.append(run)
-                if run.text =='?' and run.font.name == "SolaimanLipi":
-                    run.font.name = "SutonnyMJ"
-                if contains_unicode(run.text) and run.font.name == "SolaimanLipi":
+                if run.text =='?' and run.font.name in unicode_fonts:
+                    set_run_font(run)
+                if contains_unicode(run.text) and run.font.name in unicode_fonts:
             # Convert the text from Unicode to Bijoy
                     converted_text = unicode_converter.convertUnicodeToBijoy(run.text)
                     converted_text = re.sub(pattern, minor_fixes, converted_text)
@@ -133,7 +161,7 @@ def replace_and_highlight(doc_path, save_path, h_value):
                         run.text = converted_text
                         if h_value == 1:
                             run.font.highlight_color = WD_COLOR_INDEX.TURQUOISE  # Teal highlight
-                        run.font.name = "SutonnyMJ"  # Set font to Bijoy
+                        set_run_font(run)  # Set font to Bijoy
                         runs.append(run)
                 
                         
@@ -144,10 +172,10 @@ def replace_and_highlight(doc_path, save_path, h_value):
             for cell in row.cells:
                 for paragraph in cell.paragraphs:
                     for run in paragraph.runs:
-                        if run.text =='?' and run.font.name == "SolaimanLipi":
-                            run.font.name = "SutonnyMJ"
+                        if run.text =='?' and run.font.name in unicode_fonts:
+                            set_run_font(run)
                         if contains_unicode(run.text):
-                            if contains_unicode(run.text) and run.font.name == "SolaimanLipi":
+                            if contains_unicode(run.text) and run.font.name in unicode_fonts:
                         # Convert the text from Unicode to Bijoy
                                 converted_text = unicode_converter.convertUnicodeToBijoy(run.text)
                                 converted_text = re.sub(pattern, minor_fixes, converted_text)
@@ -161,16 +189,10 @@ def replace_and_highlight(doc_path, save_path, h_value):
                                     run.text = converted_text
                                     if h_value == 1:
                                         run.font.highlight_color = WD_COLOR_INDEX.TURQUOISE  # Teal highlight
-                                    run.font.name = "SutonnyMJ" # Set font to Bijoy
+                                    set_run_font(run) # Set font to Bijoy
                                     runs.append(run)
-                            if run.text =='?' and run.font.name == "SolaimanLipi":
-                                run.font.name = "SutonnyMJ"
+                                
 
-    for run in runs:
-        try:
-            run.font.name = "SutonnyMJ"
-        except Exception as e:
-            print(f"Error setting font: {e}")
     # Save the document
     doc.save(save_path)
-    messagebox.showinfo(f"Total words converted: {len(runs)}", "Conversion Complete")
+    messagebox.showinfo("Conversion Complete", f"Total words converted: {len(runs)}")

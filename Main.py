@@ -8,6 +8,7 @@ import convertion_logic  # Import the wordconv module
 import sys
 import json
 
+
 def resource_path(relative_path):
     """ Get absolute path to resource (for PyInstaller or normal run) """
     if hasattr(sys, '_MEIPASS'):

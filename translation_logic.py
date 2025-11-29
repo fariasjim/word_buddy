@@ -116,19 +116,42 @@ def get_simple_omath_text(omath_element):
 # --- Example Usage in your Table Loop ---
 
 # Assuming 'doc' is your loaded document object
-for table in doc.tables:
+for table_id, table in enumerate(doc.tables):
     for r_count, row in enumerate(table.rows):
         for c_count, cell in enumerate(row.cells):
+            iter_cell_text = []
+            cell_text = ""
             for para in cell.paragraphs:
+                for ele in para._element:
+                    #print(ele.tag)
+                    if r_count != 0 and r_count !=7 and c_count ==0: 
+                        if ele.tag == f"{M_NAMESPACE}oMath":
+                            #print("Equation found")
+                            omath = get_simple_omath_text(ele)
+                            #print(omath)
+                            #print(f"table: {table_id}, row: {r_count}, col: {c_count}")
+                            iter_cell_text.append(str(omath))
+                            #print(omath)
+                        else:
+                            #print(ele.text)
+                            #print(f"table: {table_id}, row: {r_count}, col: {c_count}")
+                            if ele.text is not None:
+                                iter_cell_text.append(str(ele.text))
+            
+            cell_text = " ".join(iter_cell_text)
+            print(f"table: {table_id}, row: {r_count}, col: {c_count}")
+            print(cell_text)
+            with open("log.txt", "a", encoding="utf-8") as f:
+                f.write(f"table: {table_id}, row: {r_count}, col: {c_count}\n")
+                f.write(cell_text + "\n")
+                #omath_element = extract_omath_xml(para)
                 
-                omath_element = extract_omath_xml(para)
-                
-                if omath_element is not None:
-                    raw_equation_text = get_simple_omath_text(omath_element)
+                #if omath_element is not None:
+                    #raw_equation_text = get_simple_omath_text(omath_element)
                     
-                    print(f"[{r_count}, {c_count}] Found OMath. Raw Text: '{raw_equation_text}'")
+                    #print(f"[{r_count}, {c_count}] Found OMath. Raw Text: '{raw_equation_text}'")
                     
-                # Continue with your image/text processing logic here...
+                # Continue with your image/text processing logic here
 
 
 
