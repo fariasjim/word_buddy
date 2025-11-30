@@ -6,6 +6,7 @@ from docx.oxml.ns import nsdecls
 from lxml import etree
 import time
 import customtkinter as ctk
+from tkinter import messagebox
 
 M_NAMESPACE = '{http://schemas.openxmlformats.org/officeDocument/2006/math}'
 
@@ -21,7 +22,9 @@ def get_simple_omath_text(omath_element):
         text_parts.append(text)
     return "".join(text_parts).strip()
 
-def main(question_type, file_path):
+def main(question_type, file_path, save_path):
+    global doc
+    doc = doc(file_path)
     if question_type == "mcq":
         step = len(doc.tables)/100
         progress = 0
@@ -44,7 +47,10 @@ def main(question_type, file_path):
                                                 iter_cell_text.append(str(ele.text))
                                     iter_cell_text.append("\n")
                                 cell_text = " ".join(iter_cell_text)
-                                next_cell.text = translator(cell_text)
+                                try:
+                                    next_cell.text = translator(cell_text)
+                                except Exception as e:
+                                    messagebox.showerror("Error", str(e))
                                 try:
                                     for para in next_cell.paragraphs:
                                         for run in para.runs:
@@ -53,7 +59,6 @@ def main(question_type, file_path):
                                 except:
                                     pass
             progress += step
-            print(f"Progress: {progress}")
     elif question_type == "saq":
         for table in doc.tables:
             for r_count, row in enumerate(table.rows):
@@ -74,15 +79,20 @@ def main(question_type, file_path):
                                                 iter_cell_text.append(str(ele.text))
                                     iter_cell_text.append("\n")
                                 cell_text = " ".join(iter_cell_text)
-                                next_cell.text = translator(cell_text)
+                                try:
+                                    next_cell.text = translator(cell_text)
+                                except Exception as e:
+                                    messagebox.showerror("Error", str(e))
     else:
         pass
+    doc.save(save_path)
 
 
-if __name__ == "__main__":
-    doc = doc(filedialog.askopenfilename())    
-    main(question_type="mcq", file_path=doc)
-    doc.save("translated.docx")
+if __name__ == "__main__":    
+    file = filedialog.askopenfilename()
+    save = filedialog.asksaveasfilename()
+    main(question_type="mcq", file_path=file, save_path=save)
+    
 
     
     

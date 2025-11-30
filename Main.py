@@ -7,6 +7,7 @@ import convertion_logic  # Import the wordconv module
 ## fixing png loading problems
 import sys
 import json
+import translation_logic
 
 
 def resource_path(relative_path):
@@ -95,14 +96,32 @@ file_path = None
 save_path = None
 h_color = ""
 
-class coming_soon(customtkinter.CTkFrame):
+class Translator(customtkinter.CTkFrame):
     def __init__(self, master=None):
         super().__init__(master)
+
         self.master = master
-        self.tabs = {}
-        self.buttons = {}
-        self.label = customtkinter.CTkLabel(self, text="Coming Soon!", font=("Arial", 26, "bold"))
+        self.label = customtkinter.CTkLabel(self, text="Text Translator", font=("Arial", 30, "bold"))
         self.label.grid(row=0, column=0, padx=20, pady=20)
+        self.label2 = customtkinter.CTkLabel(self, text="Open Path", font=("Arial",20,"bold"))
+        self.label2.grid(row=1, column=0, padx=20, sticky="w")
+
+        self.button1 = customtkinter.CTkButton(self, text="Browse", command= code.open_path_code, width=100, corner_radius=20, hover= True, hover_color="gray")
+        self.button1.grid(row=1, column=0, pady=5, sticky="e")
+
+        self.label3 = customtkinter.CTkLabel(self, text="Save Path", font=("Arial",20,"bold"))
+        self.label3.grid(row=2, column=0, padx=20, sticky="w")
+
+        self.button2 = customtkinter.CTkButton(self, text="Browse", command= code.save_path_code, width=100, corner_radius=20, hover= True, hover_color="gray")
+        self.button2.grid(row=2, column=0, pady=5, sticky="e")
+        self.checkbox1 = customtkinter.CTkSwitch(self, text="Overwrite same file", variable=overwrite_value, font=("Arial",15,"bold"))
+        self.checkbox1.grid(row=3, column=0, padx=20, pady=5, sticky="w")
+
+        self.checkbox2 = customtkinter.CTkSwitch(self, text="Open file after translation", variable=open_after_work, font=("Arial",15,"bold"))
+        self.checkbox2.grid(row=4, column=0, padx=20, pady=5, sticky="w")
+
+        self.conv_button = customtkinter.CTkButton(self, text="TRANSLATE", font=("Bahnschrift SemiBold Condensed", 30), corner_radius=20, hover= True, hover_color="green", command=code.translate)
+        self.conv_button.grid(row=9, column=0, pady=20)
 
 
 class tabbed_frame(customtkinter.CTkFrame):
@@ -199,20 +218,36 @@ class code():
                 messagebox.showerror("Error", "No Directory selected")
         except Exception as e:
             messagebox.showerror("Error", f"An error occurred: {str(e)}")
+
+    def translate():
+        global file_path
+        global save_path
+        if overwrite_value.get()==1:
+            save_path = file_path
+        try:
+            if open_after_work.get()==1:
+                translation_logic.main(question_type="mcq", file_path=file_path, save_path=save_path)
+                os.startfile(save_path)  # Open the file
+                
+            else:
+                translation_logic.main(question_type="mcq", file_path=file_path, save_path=save_path)
+            messagebox.showinfo("Completed", "Translation from Bangla to English is completed.")
+        except Exception as e:
+            messagebox.showerror("Error", f"An error occurred: {str(e)}")
     
     def convert():
-        global checkboxvalue
+        global overwrite_value
         global file_path
         global save_path
         global high_value
-        if checkboxvalue.get()==1:
+        if overwrite_value.get()==1:
             save_path = file_path
         
         hvalue = high_value.get()
             
         
         try:
-            if openvalue.get()==1:
+            if open_after_work.get()==1:
                 convertion_logic.replace_and_highlight(file_path, save_path, hvalue)
                 os.startfile(save_path)  # Open the file
             else:
@@ -238,12 +273,12 @@ class convframe(customtkinter.CTkFrame):
     def __init__(self, master=None):
         super().__init__(master)        
         ##Checkbox value
-        global checkboxvalue
-        global openvalue
+        global overwrite_value
+        global open_after_work
         global high_value
         high_value = customtkinter.IntVar(value=1)
-        openvalue = customtkinter.IntVar(value=1)
-        checkboxvalue = customtkinter.IntVar(value=1)
+        open_after_work = customtkinter.IntVar(value=1)
+        overwrite_value = customtkinter.IntVar(value=1)
 
         self.master = master
         self.label = customtkinter.CTkLabel(self, text="Unicode to ASCII converter", font=("Arial", 20, "bold"))
@@ -261,10 +296,10 @@ class convframe(customtkinter.CTkFrame):
         self.button2 = customtkinter.CTkButton(self, text="Browse", command= code.save_path_code, width=100, corner_radius=20, hover= True, hover_color="gray")
         self.button2.grid(row=2, column=0, pady=5, sticky="e")  
 
-        self.checkbox1 = customtkinter.CTkSwitch(self, text="Overwrite same file", variable=checkboxvalue, font=("Arial",15,"bold"))
+        self.checkbox1 = customtkinter.CTkSwitch(self, text="Overwrite same file", variable=overwrite_value, font=("Arial",15,"bold"))
         self.checkbox1.grid(row=3, column=0, padx=20, pady=5, sticky="w")
 
-        self.checkbox2 = customtkinter.CTkSwitch(self, text="Open file after convertion", variable=openvalue, font=("Arial",15,"bold"))
+        self.checkbox2 = customtkinter.CTkSwitch(self, text="Open file after convertion", variable=open_after_work, font=("Arial",15,"bold"))
         self.checkbox2.grid(row=4, column=0, padx=20, pady=5, sticky="w")
 
         self.checkbox3 = customtkinter.CTkSwitch(self, text="Converted text highlight", variable=high_value, font=("Arial", 15, "bold"))
@@ -372,7 +407,7 @@ class App(customtkinter.CTk):
         # Add tabs - create the page with the tab's content parent
         self.tabbed.add_tab("UniToAsci", convframe(self.tabbed.content))
         self.tabbed.select_tab("UniToAsci")
-        self.tabbed.add_tab("Coming Soon!!!", coming_soon(self.tabbed.content))
+        self.tabbed.add_tab("Translator", Translator(self.tabbed.content))
 
         #credits
         self.label = customtkinter.CTkLabel(self, text="Developed by: Farias Hamid Jim", font=("Arial", 15))
