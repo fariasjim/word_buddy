@@ -21,7 +21,7 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 TEMP_EXTRACT_DIR = os.path.join(CURRENT_DIR, "temp_update")
 url = "https://raw.githubusercontent.com/fariasjim/wordbuddy/refs/heads/main/version.txt"
 url1 = "https://raw.githubusercontent.com/fariasjim/wordbuddy/refs/heads/main/update.bat"
-version = "1.1\n"
+version = "1.1[1]\n"
 HIDE_WINDOW_FLAG = 0x08000000 
 def run_batch_file_hidden(batch_file_path):
     if sys.platform != "win32":

@@ -368,7 +368,7 @@ def credits():
     credit_window = customtkinter.CTk()
     credit_window.title("Version Info")
     credit_window.geometry("600x400")
-    changes_label = customtkinter.CTkLabel(credit_window, text="Version: 1.0.2[1]\n\nChanges:\n- Fixed various encoding problems [thanks to Rashed Shan]\n- Minor UI adjustments", font=("Times New Roman", 20), justify="left")
+    changes_label = customtkinter.CTkLabel(credit_window, text="Version: 1.1\n\nChanges:\n- Fixed various encoding problems [thanks to Rashed Shan]\n- Minor UI adjustments", font=("Times New Roman", 20), justify="left")
     changes_label.place(relx=0, rely=0)
     report_btn = customtkinter.CTkButton(credit_window, text="Report Issues", font=("Arial", 20), hover=True, hover_color='Red', command=report_issues)
     report_btn.place(relx=0.85, rely=0.05, anchor="center")
@@ -412,7 +412,7 @@ class App(customtkinter.CTk):
         #credits
         self.label = customtkinter.CTkLabel(self, text="Developed by: Farias Hamid Jim", font=("Arial", 15))
         self.label.grid(row=1, column=0, columnspan=2, pady=2, sticky="w")
-        self.bt1 = customtkinter.CTkButton(self, text="Version: 1.0.2[1]", font=("Arial", 15), bg_color="white", corner_radius=0, command= lambda: credits())
+        self.bt1 = customtkinter.CTkButton(self, text="Version: 1.1", font=("Arial", 15), bg_color="white", corner_radius=0, command= lambda: credits())
         self.bt1.grid(row=1, columnspan=2, column=0, pady=0, padx=0, sticky="e")
         self.label1 = customtkinter.CTkLabel(self, text="All rights reserved", font=("Arial", 15))
         self.label1.grid(row=1, column=0, columnspan=2, pady=2, sticky="s")
