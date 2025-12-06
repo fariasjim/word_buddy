@@ -21,11 +21,11 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 TEMP_EXTRACT_DIR = os.path.join(CURRENT_DIR, "temp_update")
 url = "https://raw.githubusercontent.com/fariasjim/wordbuddy/refs/heads/main/version.txt"
 url1 = "https://raw.githubusercontent.com/fariasjim/wordbuddy/refs/heads/main/update.bat"
-version = "1.0.2[2]\n"
+version = "1.1\n"
 HIDE_WINDOW_FLAG = 0x08000000 
 def run_batch_file_hidden(batch_file_path):
     if sys.platform != "win32":
-        print("This function is only applicable to Windows systems.")
+        messagebox.showerror("Error", "This function is only applicable to Windows systems.")
         return
     command = ["cmd.exe", "/c", batch_file_path]
     try:
@@ -36,11 +36,10 @@ def run_batch_file_hidden(batch_file_path):
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL
         )
-        print(f"Started batch file '{batch_file_path}' silently.")
-    except FileNotFoundError:
-        print(f"Error: Batch file not found at {batch_file_path}")
+    except FileNotFoundError as e:
+        messagebox.showerror("Error", "Batch file not found at {batch_file_path}")
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        messagebox.showerror("Error", "An unexpected error occurred: {e}")
 if getattr(sys, 'frozen', False):
     base_path = sys._MEIPASS
 else:
@@ -51,8 +50,6 @@ image_path3 = os.path.join(base_path, 'assets', 'WordBuddy2.gif')
 image_path4 = os.path.join(base_path, 'assets', 'WordBuddy3.gif')
 global response
 response = requests.get(url)
-print("got response")
-print(response.text)
 batch_file_path = os.path.join(base_path, "update.bat")
 class DynamicGifSplashScreen(QSplashScreen):
     def __init__(self, initial_movie_path):
@@ -119,11 +116,11 @@ class LoadingManager():
             if response.status_code == 200:
                 if response.text == version:
                     Main.main()
+                    self.splash.destroy()
                     Main.app.mainloop()
-                    self.splash.close()
                 elif response.text == "4000\n":
                     messagebox.showerror("Under maintenance", "Update under progress/Author has ended software support")
-                    self.splash.close()
+                    self.splash.destroy()
                 else:
                     self.splash.update_gif(next_gif)
                     self._set_next_stage_timer()                 
