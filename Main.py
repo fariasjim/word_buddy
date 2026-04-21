@@ -416,6 +416,12 @@ class App(customtkinter.CTk):
         self.bt1.grid(row=1, columnspan=2, column=0, pady=0, padx=0, sticky="e")
         self.label1 = customtkinter.CTkLabel(self, text="All rights reserved", font=("Arial", 15))
         self.label1.grid(row=1, column=0, columnspan=2, pady=2, sticky="s")
+        self.protocol("WM_DELETE_WINDOW", self.onClosing)
+
+    def onClosing(self, *args):
+        self.destroy()
+        import sys
+        sys.exit()     # Kills the Python process
         
 ######bypassing Init.py
 app = App()
