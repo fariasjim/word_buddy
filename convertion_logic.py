@@ -136,6 +136,7 @@ def set_run_font(run):
 
 def replace_and_highlight(doc_path, save_path, h_value):
     doc = Document(doc_path)
+    doc.save(doc_path+".bkup")
     
     # Create an instance of the Unicode class from converter.py
     unicode_converter = converter.Unicode()
