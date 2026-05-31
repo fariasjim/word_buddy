@@ -16,12 +16,12 @@ ZIP_URL = f"https://github.com/{REPO_OWNER}/{REPO_NAME}/archive/refs/heads/{BRAN
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 TEMP_EXTRACT_DIR = os.path.join(CURRENT_DIR, "temp_update")
 url = (
-    "https://raw.githubusercontent.com/fariasjim/wordbuddy/refs/heads/main/version.txt"
+    "https://raw.githubusercontent.com/fariasjim/word_buddy/refs/heads/main/version.txt"
 )
 url1 = (
-    "https://raw.githubusercontent.com/fariasjim/wordbuddy/refs/heads/main/update.bat"
+    "https://raw.githubusercontent.com/fariasjim/word_buddy/refs/heads/main/update.bat"
 )
-version = "1.1[2]\n"
+version = "1.1[3]\n"
 HIDE_WINDOW_FLAG = 0x08000000
 
 
@@ -174,4 +174,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
