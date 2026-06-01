@@ -1,5 +1,5 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QSplashScreen, QMainWindow, QLabel
+from PyQt6.QtWidgets import QApplication, QSplashScreen, QLabel
 from PyQt6.QtGui import QPixmap, QMovie
 from PyQt6.QtCore import Qt, QTimer
 import os
