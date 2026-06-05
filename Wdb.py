@@ -54,6 +54,7 @@ image_path1 = os.path.join(base_path, "assets", "WordBuddy(load).gif")
 image_path2 = os.path.join(base_path, "assets", "WordBuddy.gif")
 image_path3 = os.path.join(base_path, "assets", "WordBuddy2.gif")
 image_path4 = os.path.join(base_path, "assets", "WordBuddy3.gif")
+udv_image = os.path.join(base_path, "assets", "WordBuddy(Udvash).gif")
 global response
 response = requests.get(url)
 batch_file_path = os.path.join(base_path, "update.bat")
@@ -101,7 +102,7 @@ class LoadingManager:
         self.main_window_class = main_window_class
         self.stages = [
             (image_path1, 300),
-            (image_path2, 3280),
+            (udv_image, 3280),
             (image_path3, 2000),
             (image_path4, 100),
         ]
