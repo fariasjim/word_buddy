@@ -128,7 +128,8 @@ class LoadingManager:
             next_gif, _ = self.stages[self.current_stage]
             if batch_file_path:
                 try:
-                    os.remove(batch_file_path)
+                    if __name__ == "__main":
+                        os.remove(batch_file_path)
                 except Exception as e:
                     pass
             if response.status_code == 200:
