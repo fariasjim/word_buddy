@@ -28,11 +28,11 @@ Distribution: GitHub API for version control and automated release management.
 
 ## 📥 How to Use
 
-    Download: Navigate to the Releases section of this repository.
+    Download: Clone the repository using git clone.
 
-    Launch: Download the latest Wdb.exe file.
+    Launch: Main.py.
 
-    Run: Double-click the executable to start. No installation is necessary.
+    Run: Select your .docx file using open file button and click on Convert.
 
 ## 📸 Preview
 	<img width="596" height="400" alt="image" src="https://github.com/user-attachments/assets/f72b17da-9bef-40b2-927f-17ef98fcaf0c" />
