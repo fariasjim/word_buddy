@@ -1,4 +1,4 @@
-### Actively Working on Project. Some functions may not work accordingly. Please open Main.py to launch application (watch the how to use section below)
+### *Actively Working on Project. Some functions may not work accordingly. Please open Main.py to launch application (watch the how to use section below)*
 
 # WordBuddy 📄✨
 
