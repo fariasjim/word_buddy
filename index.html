@@ -6,11 +6,11 @@
     <title>WordBuddy UI</title>
     <style>
         @font-face {
-            font-family: 'monofur Nerd Font';
-            src: url('assets/Monofur.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-            font-display: swap;
+          font-family: 'monofur Nerd Font';
+          src: url('assets/Monofur.ttf') format('truetype');
+          font-weight: normal;
+          font-style: normal;
+          font-display: swap;
         }
 
         :root {
@@ -24,14 +24,22 @@
             --btn-gray-hover: #3a3a3a;
             --text-main: #ffffff;
             --text-muted: #9e9e9e;
+            --hint-bg: #222222;
+            --hint-border: #333333;
             --font-family-global: 'monofur Nerd Font', 'Monofur', monospace;
+            
+            /* Console log variables */
+            --bg-console: #111111;
+            --console-success: #4caf50;
+            --console-info: #2196f3;
+            --console-warn: #ff9800;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: var(--font-family-global); /* Dynamically maps to Monofur */
+            font-family: var(--font-family-global);
             -webkit-user-select: none;
             user-select: none;
         }
@@ -57,14 +65,15 @@
             position: relative;
         }
 
-        /* Top Work Area: 600px */
+        /* Top Work Area */
         .main-workspace {
             display: flex;
-            height: 600px;
+            height: 570px;
             width: 100%;
+            position: relative;
         }
 
-        /* Sidebar/Image Frame Section */
+        /* Sidebar Section */
         .sidebar-area {
             width: 400px;
             height: 100%;
@@ -78,28 +87,7 @@
             padding-top: 20px;
             border-right: 1px solid #151515;
             position: relative;
-        }
-
-        .app-logo-fallback {
-            width: 140px;
-            height: 140px;
-            background: linear-gradient(135deg, #2b2b2b, #151515);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            font-size: 13px;
-            font-weight: 500;
-            margin-bottom: 25px;
-            border: 1px solid #333;
-        }
-
-        .sidebar-title {
-            color: var(--text-main);
-            font-size: 22px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
+            z-index: 1;
         }
 
         /* Configuration Panel Space */
@@ -108,6 +96,7 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
         /* CustomTkinter Tab Segments */
@@ -123,7 +112,7 @@
             color: var(--text-muted);
             border: none;
             padding: 8px 20px;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 500;
             border-radius: 6px 6px 0 0;
             cursor: pointer;
@@ -136,7 +125,7 @@
 
         /* Inside Content Grid */
         .tab-content-viewport {
-            padding: 35px 40px;
+            padding: 25px 30px;
             display: flex;
             flex-direction: column;
             height: calc(100% - 36px);
@@ -144,9 +133,9 @@
 
         .view-header {
             color: var(--text-main);
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 600;
-            margin-bottom: 35px;
+            margin-bottom: 20px;
         }
 
         /* Control Input File Rows */
@@ -154,19 +143,19 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
 
         .row-label {
             color: var(--text-main);
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 500;
         }
 
         .ctk-btn {
             border: none;
             color: var(--text-main);
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 500;
             cursor: pointer;
             border-radius: 6px;
@@ -185,22 +174,48 @@
 
         .path-indicator {
             color: var(--text-muted);
-            font-size: 12px;
+            font-size: 13px;
             text-align: right;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             padding-right: 2px;
         }
 
+        /* User Guidance Hint Container */
+        .hint-container {
+            background-color: var(--hint-bg);
+            border: 1px solid var(--hint-border);
+            border-radius: 6px;
+            padding: 10px 5px;
+            margin-bottom: 12px;
+        }
+
+        .hint-title {
+            color: var(--bg-tab-active);
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hint-text {
+            color: var(--text-muted);
+            font-size: 12px;
+            line-height: 1.0;
+        }
+
         /* Toggle Option Switches */
         .options-stack {
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            margin-top: 15px;
-            margin-bottom: 45px;
+            gap: 14px;
+            margin-top: 5px;
+            margin-bottom: 25px;
         }
 
         .switch-container {
@@ -245,7 +260,7 @@
 
         .switch-label {
             color: var(--text-main);
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 500;
         }
 
@@ -253,16 +268,72 @@
         .btn-action-trigger {
             background-color: var(--btn-blue);
             width: 100%;
-            height: 48px;
+            height: 44px;
             font-size: 18px;
             font-weight: bold;
             letter-spacing: 1px;
             border-radius: 8px;
-            margin-top: auto;
+            margin-top: 20px;
         }
 
         .btn-action-trigger:hover {
             background-color: var(--btn-blue-hover);
+        }
+
+        /* Interactive Hoverable Terminal Panel */
+        .console-section {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 300px; /* Adjusted to align with panel-area width remaining after 400px sidebar */
+            height: 30px; /* Rest state height */
+            background-color: var(--bg-console);
+            border-top: 1px solid #222;
+            padding: 6px 15px;
+            overflow-y: hidden;
+            z-index: 10;
+            transition: height 0.3s ease-in-out, background-color 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* Hover Expansion State */
+        .console-section:hover {
+            height: 570px; /* Enlarges up to match main workspace dimensions */
+            overflow-y: auto;
+            background-color: #0b0b0b;
+            border-left: 1px solid #222;
+        }
+
+        /* Hide all old lines except the last active item when closed */
+        .console-section:not(:hover) .console-line:not(:last-child) {
+            display: none;
+        }
+
+        .console-line {
+            font-size: 12px;
+            line-height: 1.4;
+            letter-spacing: 0.5px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .line-system { color: #666666; font-style: italic; }
+        .line-info { color: var(--console-info); }
+        .line-success { color: var(--console-success); }
+        .line-warn { color: var(--console-warn); }
+
+        /* Custom Scrollbar for expanded view */
+        .console-section::-webkit-scrollbar {
+            width: 6px;
+        }
+        .console-section::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .console-section::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
         }
 
         /* Footer Section: Exact 30px Height */
@@ -275,6 +346,8 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 15px;
+            position: relative;
+            z-index: 11;
         }
 
         .footer-text {
@@ -309,17 +382,18 @@
                 <div class="tab-content-viewport">
                     <h2 class="view-header">Unicode to ASCII converter</h2>
 
-                    <div class="control-row">
-                        <span class="row-label">Open Path</span>
-                        <button class="ctk-btn btn-browse" onclick="triggerFilePicker('open')">Browse</button>
+                    <div class="hint-container">
+                        <div class="hint-title">💡 How to Use:</div>
+                        <div class="hint-text">
+                            Browse an input file (.txt or .docx), toggle your custom behavior parameters, and click CONVERT. The processed document will automatically download.
+                        </div>
                     </div>
-                    <div id="open-path-text" class="path-indicator">No file selected</div>
 
                     <div class="control-row">
-                        <span class="row-label">Save Path</span>
-                        <button class="ctk-btn btn-browse" onclick="triggerFilePicker('save')">Browse</button>
+                        <span class="row-label">Open Path</span>
+                        <button class="ctk-btn btn-browse" onclick="triggerFilePicker()">Browse</button>
                     </div>
-                    <div id="save-path-text" class="path-indicator">No path assigned</div>
+                    <div id="open-path-text" class="path-indicator">No file selected</div>
 
                     <div class="options-stack">
                         <label class="switch-container">
@@ -345,6 +419,10 @@
                 </div>
             </div>
 
+            <div class="console-section" id="terminal-log-output">
+                <div class="console-line line-system">[System Status] Operational. Awaiting task execution pipeline request...</div>
+            </div>
+
         </div>
 
         <footer class="window-footer">
@@ -358,26 +436,82 @@
     <input type="file" id="system-file-bridge" accept=".docx,.txt" style="display: none;">
 
     <script>
-        let currentTargetMode = '';
+        let selectedFile = null;
 
-        function triggerFilePicker(mode) {
-            currentTargetMode = mode;
+        const consoleOutput = document.getElementById('terminal-log-output');
+
+        function logToConsole(message, type = 'info') {
+            const line = document.createElement('div');
+            line.className = `console-line line-${type}`;
+            const timestamp = new Date().toLocaleTimeString([], { hour12: false });
+            line.textContent = `[${timestamp}] ${message}`;
+            consoleOutput.appendChild(line);
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+
+        function triggerFilePicker() {
             document.getElementById('system-file-bridge').click();
         }
 
         document.getElementById('system-file-bridge').addEventListener('change', function(e) {
             if (e.target.files.length > 0) {
                 const filename = e.target.files[0].name;
-                if (currentTargetMode === 'open') {
-                    document.getElementById('open-path-text').textContent = filename;
-                } else if (currentTargetMode === 'save') {
-                    document.getElementById('save-path-text').textContent = "Target folder: /" + filename;
-                }
+                selectedFile = e.target.files[0];
+                document.getElementById('open-path-text').textContent = filename;
+                logToConsole(`Loaded input target file: "${filename}"`, 'info');
             }
         });
 
         function executeConversion() {
-            console.log("Conversion triggered.");
+            if (!selectedFile) {
+                logToConsole("Execution Aborted: Missing required primary input source file.", "warn");
+                return;
+            }
+
+            const optOverwrite = document.getElementById('switch-overwrite').checked;
+            const optOpen = document.getElementById('switch-open').checked;
+            const optHighlight = document.getElementById('switch-highlight').checked;
+
+            logToConsole(`Initializing wordbuddy script process pipeline...`, 'info');
+            logToConsole(`Active Configs -> Overwrite: ${optOverwrite} | Auto-Open: ${optOpen} | Highlight: ${optHighlight}`, 'system');
+
+            setTimeout(() => {
+                logToConsole(`Python Core: Parsing Unicode characters out of ${selectedFile.name}...`, 'info');
+            }, 400);
+
+            setTimeout(() => {
+                logToConsole(`Python Core: Normalizing text nodes into valid ASCII sequences...`, 'info');
+            }, 900);
+
+            setTimeout(() => {
+                logToConsole(`Process Success! Initiating auto-download for processed file.`, 'success');
+                triggerAutomaticDownload();
+            }, 1400);
+        }
+
+        function triggerAutomaticDownload() {
+            if (!selectedFile) return;
+            
+            // Simulating downloaded file content generation
+            const standardAsciiContent = "WordBuddy Processed Data\n-----------------------\nASCII Normalized String Outputs.";
+            const blob = new Blob([standardAsciiContent], { type: "text/plain" });
+            
+            const downloadLink = document.createElement("a");
+            const originalName = selectedFile.name;
+            const dotIndex = originalName.lastIndexOf(".");
+            
+            // Appends '_ascii' suffix before file extension name
+            const newName = dotIndex !== -1 
+                ? originalName.substring(0, dotIndex) + "_ascii" + originalName.substring(dotIndex)
+                : originalName + "_ascii.txt";
+
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.download = newName;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            
+            logToConsole(`File "${newName}" downloaded successfully.`, 'success');
         }
     </script>
 </body>
