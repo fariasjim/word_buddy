@@ -435,84 +435,158 @@
 
     <input type="file" id="system-file-bridge" accept=".docx,.txt" style="display: none;">
 
-    <script>
-        let selectedFile = null;
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
 
-        const consoleOutput = document.getElementById('terminal-log-output');
+<script>
+    let selectedFile = null;
+    let pyodideInstance = null;
+    let runtimeReady = false;
 
-        function logToConsole(message, type = 'info') {
-            const line = document.createElement('div');
-            line.className = `console-line line-${type}`;
-            const timestamp = new Date().toLocaleTimeString([], { hour12: false });
-            line.textContent = `[${timestamp}] ${message}`;
-            consoleOutput.appendChild(line);
-            consoleOutput.scrollTop = consoleOutput.scrollHeight;
-        }
+    const consoleOutput = document.getElementById('terminal-log-output');
 
-        function triggerFilePicker() {
-            document.getElementById('system-file-bridge').click();
-        }
+    function logToConsole(message, type = 'info') {
+        const line = document.createElement('div');
+        line.className = `console-line line-${type}`;
+        const timestamp = new Date().toLocaleTimeString([], { hour12: false });
+        line.textContent = `[${timestamp}] ${message}`;
+        consoleOutput.appendChild(line);
+        consoleOutput.scrollTop = consoleOutput.scrollHeight;
+    }
 
-        document.getElementById('system-file-bridge').addEventListener('change', function(e) {
-            if (e.target.files.length > 0) {
-                const filename = e.target.files[0].name;
-                selectedFile = e.target.files[0];
-                document.getElementById('open-path-text').textContent = filename;
-                logToConsole(`Loaded input target file: "${filename}"`, 'info');
+    // 1. DYNAMIC ASYNC ENVIRONMENT BOOTSTRAPPER
+    async function initializePyodideEngine() {
+        logToConsole("Initializing Pyodide WebAssembly runtime...", "system");
+        try {
+            // Spin up the WASM Python virtual engine instance
+            pyodideInstance = await loadPyodide();
+            
+            logToConsole("Pyodide Engine Core online. Resolving dependencies (python-docx, lxml)...", "system");
+            await pyodideInstance.loadPackage(["micropip"]);
+            const micropip = pyodideInstance.pyimport("micropip");
+            await micropip.install("python-docx");
+
+            // Prevent GUI framework crashes by mocking tkinter components instantly inside the runtime
+            pyodideInstance.runPython(`
+                import sys
+                from types import ModuleType
+                tk_mock = ModuleType('tkinter')
+                mb_mock = ModuleType('messagebox')
+                mb_mock.showinfo = lambda t, m: print(f"[MOCKED_INFO]: {m}")
+                tk_mock.messagebox = mb_mock
+                sys.modules['tkinter'] = tk_mock
+                sys.modules['tkinter.messagebox'] = mb_mock
+            `);
+
+            // DYNAMIC FILE SYNC: Fetch raw Python modules directly from your web host directory structure
+            logToConsole("Mounting pipeline modules dynamically from application workspace...", "system");
+            
+            const modulesToMount = ['converter.py', 'convertion_logic.py', 'web_bridge.py', 'util.py'];
+            
+            for (const moduleFile of modulesToMount) {
+                // Fetch the literal, clean file over HTTP/HTTPS cache layers
+                const response = await fetch(`./${moduleFile}`);
+                if (!response.ok) {
+                    throw new Error(`Workspace synchronization failed. System could not resolve: ${moduleFile}`);
+                }
+                const rawPythonCode = await response.text();
+                
+                // Mount the script inside Pyodide's virtual disk layer under its literal name
+                pyodideInstance.FS.writeFile(moduleFile, rawPythonCode, { encoding: 'utf8' });
+                logToConsole(`-> Virtual file system synchronized: ${moduleFile}`, 'info');
             }
-        });
 
-        function executeConversion() {
-            if (!selectedFile) {
-                logToConsole("Execution Aborted: Missing required primary input source file.", "warn");
-                return;
-            }
+            runtimeReady = true;
+            logToConsole("Sandbox virtual storage operational. Engine ready for operations.", "success");
+        } catch (error) {
+            logToConsole(`Initialization failed: ${error.message}`, "danger");
+        }
+    }
 
-            const optOverwrite = document.getElementById('switch-overwrite').checked;
-            const optOpen = document.getElementById('switch-open').checked;
-            const optHighlight = document.getElementById('switch-highlight').checked;
+    // Initialize environment boot on interface startup
+    initializePyodideEngine();
 
-            logToConsole(`Initializing wordbuddy script process pipeline...`, 'info');
-            logToConsole(`Active Configs -> Overwrite: ${optOverwrite} | Auto-Open: ${optOpen} | Highlight: ${optHighlight}`, 'system');
+    function triggerFilePicker() {
+        document.getElementById('system-file-bridge').click();
+    }
 
-            setTimeout(() => {
-                logToConsole(`Python Core: Parsing Unicode characters out of ${selectedFile.name}...`, 'info');
-            }, 400);
+    document.getElementById('system-file-bridge').addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            const filename = e.target.files[0].name;
+            selectedFile = e.target.files[0];
+            document.getElementById('open-path-text').textContent = filename;
+            logToConsole(`Loaded input target file: "${filename}"`, 'info');
+        }
+    });
 
-            setTimeout(() => {
-                logToConsole(`Python Core: Normalizing text nodes into valid ASCII sequences...`, 'info');
-            }, 900);
-
-            setTimeout(() => {
-                logToConsole(`Process Success! Initiating auto-download for processed file.`, 'success');
-                triggerAutomaticDownload();
-            }, 1400);
+    // 2. RUNTIME PIPELINE EXECUTION PIPELINE
+    async function executeConversion() {
+        if (!runtimeReady) {
+            logToConsole("Execution Blocked: WebAssembly system modules are still downloading.", "warn");
+            return;
+        }
+        if (!selectedFile) {
+            logToConsole("Execution Aborted: Missing required primary input source file.", "warn");
+            return;
         }
 
-        function triggerAutomaticDownload() {
-            if (!selectedFile) return;
-            
-            // Simulating downloaded file content generation
-            const standardAsciiContent = "WordBuddy Processed Data\n-----------------------\nASCII Normalized String Outputs.";
-            const blob = new Blob([standardAsciiContent], { type: "text/plain" });
-            
-            const downloadLink = document.createElement("a");
-            const originalName = selectedFile.name;
-            const dotIndex = originalName.lastIndexOf(".");
-            
-            // Appends '_ascii' suffix before file extension name
-            const newName = dotIndex !== -1 
-                ? originalName.substring(0, dotIndex) + "_ascii" + originalName.substring(dotIndex)
-                : originalName + "_ascii.txt";
+        const optHighlight = document.getElementById('switch-highlight').checked;
+        const hValueInteger = optHighlight ? 1 : 0;
 
-            downloadLink.href = URL.createObjectURL(blob);
-            downloadLink.download = newName;
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-            
-            logToConsole(`File "${newName}" downloaded successfully.`, 'success');
+        logToConsole(`Initializing wordbuddy script process pipeline...`, 'info');
+
+        try {
+            const fileReader = new FileReader();
+            fileReader.onload = async function(event) {
+                const arrayBuffer = event.target.result;
+                const uint8Array = new Uint8Array(arrayBuffer);
+
+                logToConsole("Injecting document stream into local WebAssembly sandbox...", "info");
+                
+                // Expose operational parameters straight to global scope targets
+                pyodideInstance.globals.set("raw_file_bytes", uint8Array);
+                pyodideInstance.globals.set("highlight_toggle", hValueInteger);
+                
+                // Simply import your modular files exactly like standard Python!
+                const resultProxy = await pyodideInstance.runPythonAsync(`
+                    import web_bridge
+                    web_bridge.run_conversion_in_browser(raw_file_bytes, highlight_toggle)
+                `);
+
+                const outputBytes = resultProxy.get("bytes");
+                const totalConverted = resultProxy.get("count");
+
+                logToConsole(`Process Success! Transformed: ${totalConverted} components.`, 'success');
+                triggerAutomaticDownload(outputBytes);
+                
+                resultProxy.destroy();
+            };
+            fileReader.readAsArrayBuffer(selectedFile);
+
+        } catch (err) {
+            logToConsole(`Execution Error: ${err.message}`, 'danger');
         }
-    </script>
-</body>
+    }
+
+    // 3. COMPILED DOWNLOAD GENERATION
+    function triggerAutomaticDownload(processedUint8Array) {
+        if (!selectedFile || !processedUint8Array) return;
+        
+        const docBlob = new Blob([processedUint8Array], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+        const downloadLink = document.createElement("a");
+        const originalName = selectedFile.name;
+        const dotIndex = originalName.lastIndexOf(".");
+        
+        const newName = dotIndex !== -1 
+            ? originalName.substring(0, dotIndex) + "_converted" + originalName.substring(dotIndex)
+            : originalName + "_converted.docx";
+
+        downloadLink.href = URL.createObjectURL(docBlob);
+        downloadLink.download = newName;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        
+        logToConsole(`File "${newName}" compiled and downloaded successfully.`, 'success');
+    }
+</script></body>
 </html>
