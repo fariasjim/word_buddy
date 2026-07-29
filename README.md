@@ -31,6 +31,8 @@ Distribution: GitHub API for version control and automated release management.
 ## 📥 How to Use
 
     Download: Clone the repository using git clone.
+    Required: Python 3.14 {Minimum}
+    Requirements: pip install -r requirements.txt
 
     Launch: Main.py.
 
